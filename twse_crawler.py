@@ -3,6 +3,27 @@ import requests
 import json
 import pandas as pd
 
+def en_columns() -> list[str]:
+    en_columns = [
+        "StockID",
+        "StockName",
+        "TradeVolume",
+        "Transaction",
+        "TradeValue",
+        "OpenPrice",
+        "HightestPrice",
+        "LowestPrice",
+        "ClosePrice",
+        "PriceChangeSign",
+        "PriceChange",
+        "FinalBuyPrice",
+        "FinalBuyVolume",
+        "FinalSellPrice",
+        "FinalSellVolume",
+        "PER"
+    ]
+    return en_columns
+
 def zh2en_columns() -> dict[str, str]:
     zh2en_columns = {
         "證券代號": "StockID",
@@ -71,14 +92,17 @@ def post_process(df: pd.DataFrame, date: str) -> pd.DataFrame:
     return df
 
 
-def crawler_twse(date) -> None:
+def crawler_twse(date) -> pd.DataFrame:
     url = f'https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date={date.replace("-", "")}&type=ALL&response=json'
     result = requests.get(url, headers=twse_headers())
     result = result.json()
-    target_table = result["tables"][8]
-    df = pd.DataFrame(columns=target_table["fields"], data=target_table["data"])
-    df = post_process(df, date)
-    return df
+    if result["stat"] == "OK":
+        target_table = result["tables"][8]
+        df = pd.DataFrame(columns=target_table["fields"], data=target_table["data"])
+        df = post_process(df, date)
+    else:
+        df = pd.DataFrame(columns=en_columns())
+    return df 
 
 
 

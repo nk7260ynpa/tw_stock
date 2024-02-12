@@ -1,0 +1,34 @@
+version: "0.1"
+services:
+  mysql:
+    image: mysql:8.3.0
+    command: mysqld --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: twse
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: chen
+      MYSQL_PASSWORD: chen
+    ports:
+      - "3306:3306"
+    volumes:
+      - stock:/var/lib/mysql
+    networks:
+      - stock
+
+  phpmyadmin:
+      image: phpmyadmin:5.2.1
+      links:
+        - mysql:db
+      ports:
+        - "8077:80"
+      depends_on:
+        - mysql
+      networks:
+        - stock
+
+networks:
+  stock:
+
+volumes:
+  stock:
+    external: true
