@@ -25,6 +25,11 @@ services:
         - mysql
       networks:
         - stock
+        
+  twse_crawler:
+      image: twse_crawler:0.1
+      networks:
+        - stock
 
 networks:
   stock:

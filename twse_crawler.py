@@ -2,6 +2,7 @@ import os
 import requests
 import json
 import pandas as pd
+from clients import get_mysql_stock_conn
 
 def en_columns() -> list[str]:
     en_columns = [
@@ -103,6 +104,22 @@ def crawler_twse(date) -> pd.DataFrame:
     else:
         df = pd.DataFrame(columns=en_columns())
     return df 
+
+def upload_DB(date):
+    mysql_stock_conn = get_mysql_stock_conn()
+    Exist_date_list = mysql_stock_conn.execute("SELECT Date FROM twse_date").fetchall()
+    Exist_date_list = [data[0].strftime("%Y-%m-%d") for data in Exist_date_list]
+    if date not in Exist_date_list:
+        mysql_stock_conn.execute(f"INSERT INTO twse_date (`Date`) VALUES ('{date}')")
+        df = crawler_twse(date)
+        df.to_sql(name="twse", con=mysql_stock_conn,
+                  if_exists="append",
+                  index=False,
+                  chunksize=1000)
+    else:
+        pass
+    
+
 
 
 
