@@ -13,7 +13,8 @@ services:
     volumes:
       - stock:/var/lib/mysql
     networks:
-      - stock
+      stock:
+        ipv4_address: 172.27.0.3
 
   phpmyadmin:
       image: phpmyadmin:5.2.1
@@ -26,13 +27,10 @@ services:
       networks:
         - stock
         
-  twse_crawler:
-      image: twse_crawler:0.1
-      networks:
-        - stock
 
 networks:
   stock:
+    external: true
 
 volumes:
   stock:

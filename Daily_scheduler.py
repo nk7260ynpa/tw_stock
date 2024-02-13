@@ -12,13 +12,15 @@ def main():
     scheduler.add_job(id="daily_twse_crawler",
                       func=daily_twse_crawler,
                       trigger="cron",
-                      hour="10",
+                      hour="16",
                       minute="13",
                       day_of_week="*"
                     )
     scheduler.start()
 
 if __name__ == "__main__":
-    main()
-    while True:
-        time.sleep(3600)
+    # main()
+    # while True:
+    #     time.sleep(3600)
+
+    upload_DB("2023-04-18")
