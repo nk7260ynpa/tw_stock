@@ -1,10 +1,9 @@
 FROM python:3.10.13
-COPY . .
 RUN pip install APScheduler
 RUN pip install requests
 RUN pip install pandas=="2.1.4"
 RUN pip install SQLAlchemy=="1.4.45"
 RUN pip install pymysql
-
-
 WORKDIR /root
+COPY . .
+CMD [ "python3", "Daily_scheduler.py"]
