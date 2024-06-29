@@ -2,6 +2,76 @@ import pandas as pd
 import utils
 import twse_crawler 
 
+def test_en_columns():
+    en_columns = twse_crawler.en_columns()
+    assert len(en_columns) == 16
+    assert en_columns[0] == "StockID"
+    assert en_columns[1] == "StockName"
+    assert en_columns[2] == "TradeVolume"
+    assert en_columns[3] == "Transaction"
+    assert en_columns[4] == "TradeValue"
+    assert en_columns[5] == "OpenPrice"
+    assert en_columns[6] == "HightestPrice"
+    assert en_columns[7] == "LowestPrice"
+    assert en_columns[8] == "ClosePrice"
+    assert en_columns[9] == "PriceChangeSign"
+    assert en_columns[10] == "PriceChange"
+    assert en_columns[11] == "FinalBuyPrice"
+    assert en_columns[12] == "FinalBuyVolume"
+    assert en_columns[13] == "FinalSellPrice"
+    assert en_columns[14] == "FinalSellVolume"
+    assert en_columns[15] == "PER"
+
+def test_zh2en_columns():
+    zh2en_columns = twse_crawler.zh2en_columns()
+    assert len(zh2en_columns) == 16
+    assert zh2en_columns["證券代號"] == "StockID"
+    assert zh2en_columns["證券名稱"] == "StockName"
+    assert zh2en_columns["成交股數"] == "TradeVolume"
+    assert zh2en_columns["成交筆數"] == "Transaction"
+    assert zh2en_columns["成交金額"] == "TradeValue"
+    assert zh2en_columns["開盤價"] == "OpenPrice"
+    assert zh2en_columns["最高價"] == "HightestPrice"
+    assert zh2en_columns["最低價"] == "LowestPrice"
+    assert zh2en_columns["收盤價"] == "ClosePrice"
+    assert zh2en_columns["漲跌(+/-)"] == "PriceChangeSign"
+    assert zh2en_columns["漲跌價差"] == "PriceChange"
+    assert zh2en_columns["最後揭示買價"] == "FinalBuyPrice"
+    assert zh2en_columns["最後揭示買量"] == "FinalBuyVolume"
+    assert zh2en_columns["最後揭示賣價"] == "FinalSellPrice"
+    assert zh2en_columns["最後揭示賣量"] == "FinalSellVolume"
+    assert zh2en_columns["本益比"] == "PER"
+
+def test_twse_headers():
+    headers = twse_crawler.twse_headers()
+    assert len(headers) == 8
+    assert 'Accept' in headers
+    assert 'Accept-Encoding' in headers
+    assert 'Accept-Language' in headers
+    assert 'Connection' in headers
+    assert 'Host' in headers
+    assert 'Referer' in headers
+    assert 'User-Agent' in headers
+    assert 'X-Requested-With' in headers
+
+def test_html2signal():
+    html2signal = twse_crawler.html2signal()
+    assert " " in html2signal.values()
+    assert "-" in html2signal.values()
+    assert "+" in html2signal.values()
+    assert "X" in html2signal.values()
+
+def test_remove_comma():
+    x = "1,000"
+    x = twse_crawler.remove_comma(x)
+    assert x == "1000"
+    x = "1,000,000"
+    x = twse_crawler.remove_comma(x)
+    assert x == "1000000"
+
+
+
+
 def test_holiday_crawler():
     date = "2024-01-01"
     df = twse_crawler.crawler_twse(date)
