@@ -2,7 +2,7 @@ import os
 import requests
 import json
 import pandas as pd
-from clients import get_mysql_stock_conn
+from db_clients import get_mysql_stock_conn
 
 def en_columns() -> list[str]:
     en_columns = [
