@@ -1,6 +1,7 @@
 import pandas as pd
 import utils
 import twse_crawler 
+import requests
 
 def test_en_columns():
     en_columns = twse_crawler.en_columns()
@@ -69,23 +70,52 @@ def test_remove_comma():
     x = twse_crawler.remove_comma(x)
     assert x == "1000000"
 
+def test_post_process():
+    date = '2021-10-01'
+    df = pd.read_csv("tests/twse_crawler/test.csv")
+    df["OpenPrice"] = df["OpenPrice"].astype("object")
+    df["HightestPrice"] = df["HightestPrice"].astype("object")
+    df["LowestPrice"] = df["LowestPrice"].astype("object")
+    df["ClosePrice"] = df["ClosePrice"].astype("object")
+    df["PriceChange"] = df["PriceChange"].astype("str")
+    df["FinalBuyPrice"] = df["FinalBuyPrice"].astype("str")
+    df["FinalBuyVolume"] = df["FinalBuyVolume"].astype("str")
+    df["FinalSellPrice"] = df["FinalSellPrice"].astype("str")
+    df["FinalSellVolume"] = df["FinalSellVolume"].astype("str")
+    df["PER"] = df["PER"].astype("str")
+    df = twse_crawler.post_process(df, date)
+    assert df["OpenPrice"].dtype == float
+    assert df["FinalBuyVolume"].dtype == int
+    assert df["Date"].dtype == "datetime64[ns]"
 
-
-
-def test_holiday_crawler():
+def test_holiday_crawler(mocker):
+    mock_response = mocker.Mock()
+    mock_response.json.return_value = {"stat": "很抱歉，沒有符合條件的資料!"}
+    mocker.patch('requests.get', return_value=mock_response)
     date = "2024-01-01"
     df = twse_crawler.crawler_twse(date)
     assert isinstance(df, pd.DataFrame)
 
-def test_weekend_crawler():
+def test_weekend_crawler(mocker):
+    mock_response = mocker.Mock()
+    mock_response.json.return_value = {"stat": "很抱歉，沒有符合條件的資料!"}
+    mocker.patch('requests.get', return_value=mock_response)
     date = "2024-01-13"
     df = twse_crawler.crawler_twse(date)
     assert isinstance(df, pd.DataFrame)
 
-def test_week_crawler():
+def test_week_crawler(mocker):
+    mock_response = mocker.Mock()
+    mock_response.json.return_value = {"stat": "OK", 
+                                       "tables": [0, 1, 2, 3, 4, 5 ,6, 7, {"fields": [1],
+                                                                           "data": [1, 2, 3]}]}
+    mocker.patch('requests.get', return_value=mock_response)
+    mocker.patch('twse_crawler.post_process', return_value=pd.DataFrame())
     date = "2024-01-12"
     df = twse_crawler.crawler_twse(date)
     assert isinstance(df, pd.DataFrame)
+
+
 
 def test_en_date_list():
     start_date = "2024-01-30"

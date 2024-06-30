@@ -86,9 +86,9 @@ def post_process(df: pd.DataFrame, date: str) -> pd.DataFrame:
     df["ClosePrice"] = df["ClosePrice"].str.replace(",", "").str.replace("--", "0").astype(float)
     df["PriceChange"] = df["PriceChange"].str.replace(",", "").str.replace("--", "0").astype(float)
     df["FinalBuyPrice"] = df["FinalBuyPrice"].str.replace(",", "").str.replace("--", "0").astype(float)
-    df["FinalBuyVolume"] = df["FinalBuyVolume"].str.replace(",", "").str.replace("--", "0").astype(int)
+    df["FinalBuyVolume"] = df["FinalBuyVolume"].str.replace(",", "").str.replace("--", "0").str.replace("", "0").astype(int)
     df["FinalSellPrice"] = df["FinalSellPrice"].str.replace(",", "").str.replace("--", "0").astype(float)
-    df["FinalSellVolume"] = df["FinalSellVolume"].str.replace(",", "").str.replace("--", "0").astype(int)
+    df["FinalSellVolume"] = df["FinalSellVolume"].str.replace(",", "").str.replace("--", "0").str.replace("", "0").astype(int)
     df["PER"] = df["PER"].str.replace(",", "").astype(float)
     return df
 
