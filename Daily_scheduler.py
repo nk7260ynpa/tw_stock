@@ -3,7 +3,18 @@ from datetime import datetime
 from twse_crawler import upload_DB
 import time
 
-def daily_twse_crawler() -> None:
+def daily_twse_crawler():
+    """
+    This function is used to crawl the daily TWSE data and upload to the database.
+
+    Parameters:
+    ----------
+    None
+
+    Returns:
+    ----------
+    None
+    """
     upload_DB(datetime.today().strftime('%Y-%m-%d'))
     print("Daily TWSE Crawler is done at", datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
     
@@ -13,8 +24,8 @@ def main() -> None:
     scheduler.add_job(id="daily_twse_crawler",
                       func=daily_twse_crawler,
                       trigger="cron",
-                      hour="22",
-                      minute="04",
+                      hour="14",
+                      minute="00",
                       day_of_week="*"
                     )
     print("Starting Scheduler...")

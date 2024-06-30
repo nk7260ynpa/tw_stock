@@ -4,7 +4,18 @@ import json
 import pandas as pd
 from db_clients import get_mysql_stock_conn
 
-def en_columns() -> list[str]:
+def en_columns():
+    """
+    This function is used to return the English column names of the TWSE data.
+
+    Parameters:
+    ----------
+    None
+
+    Returns:
+    ----------
+    en_columns (list): The English column names of the TWSE data
+    """
     en_columns = [
         "StockID",
         "StockName",

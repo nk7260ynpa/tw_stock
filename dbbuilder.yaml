@@ -14,7 +14,7 @@ services:
       - stock:/var/lib/mysql
     networks:
       stock:
-        ipv4_address: 172.27.0.3
+        ipv4_address: 172.27.0.2
 
   phpmyadmin:
       image: phpmyadmin:5.2.1
@@ -35,6 +35,9 @@ services:
 
 networks:
   stock:
+    ipam:
+      config:
+        - subnet: 172.27.0.2/16
     external: true
 
 volumes:
